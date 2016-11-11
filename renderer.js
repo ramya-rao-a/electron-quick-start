@@ -3,6 +3,7 @@
 // All of the Node.js APIs are available in this process.
 
 const crashReporter = require('electron').crashReporter
+const cp = require('child_process')
 
 var button1 = document.createElement('button');
 button1.textContent = 'Initialize Crash';
@@ -19,18 +20,14 @@ var button2 = document.createElement('button');
 button2.textContent = 'Crash';
 document.body.appendChild(button2);
 button2.addEventListener('click', () => {
-   process.crash();
+    process.crash();
 })
 
 
 var button3 = document.createElement('button');
-button3.textContent = 'Last Crash';
+button3.textContent = 'Crash in a child process';
 document.body.appendChild(button3);
 button3.addEventListener('click', () => {
-   var report = crashReporter.getLastCrashReport()
-   if (!report) {
-       alert('no report')
-   } else {
-       alert(report.date)
-   }
+   cp.execFile('./a.out', null)
 })
+
