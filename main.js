@@ -3,7 +3,7 @@ const electron = require('electron')
 const app = electron.app
 // Module to create native browser window.
 const BrowserWindow = electron.BrowserWindow
-
+const crashReporter = electron.crashReporter
 const path = require('path')
 const url = require('url')
 
@@ -22,9 +22,6 @@ function createWindow () {
     slashes: true
   }))
 
-  // Open the DevTools.
-  mainWindow.webContents.openDevTools()
-
   // Emitted when the window is closed.
   mainWindow.on('closed', function () {
     // Dereference the window object, usually you would store windows
@@ -37,7 +34,15 @@ function createWindow () {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', createWindow)
+app.on('ready', () => {
+    crashReporter.start({
+      productName: 'dummy-product-main',
+      companyName: 'dummy-company-main',
+      submitURL: 'http://localhost:8080/uploadDump/mainDump'
+    });
+
+    createWindow();
+})
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function () {
